@@ -1,7 +1,7 @@
 #include "relay_controller.h"
 
 RelayController::RelayController(int serPin, int rclkPin, int srclkPin, int numOfShiftRegisters)
-    : _shiftRegister(numOfShiftRegisters, serPin, rclkPin, srclkPin) {
+    : _shiftRegister(serPin, rclkPin, srclkPin) {
     _relayStates.fill(false);
 }
 
