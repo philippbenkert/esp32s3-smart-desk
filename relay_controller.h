@@ -22,7 +22,7 @@ public:
     };
 
 private:
-    ShiftRegister74HC595<numOfShiftRegisters> _shiftRegister;
+    ShiftRegister74HC595<1> _shiftRegister;
     std::array<bool, 6> _relayStates;
 };
 
