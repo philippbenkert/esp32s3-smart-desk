@@ -26,12 +26,10 @@ void setup() {
     mqttManager.setup();
     mqttManager.setCallback(mqttCallback);
     relayController.setup();
-    setupMotors();
 }
 
 void loop() {
     // Hauptlogik hier
     wifiManager.loop();
     mqttManager.loop();
-    loopMotors();
 }
