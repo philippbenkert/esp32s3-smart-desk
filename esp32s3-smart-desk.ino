@@ -11,6 +11,11 @@ const char* mqtt_server = "192.168.0.1";
 const int mqtt_port = 1883;
 const char* client_id = "ESP32S3_Client";
 MQTTManager mqttManager(mqtt_server, mqtt_port, client_id);
+const int SER_Pin = 7;
+const int RCLK_Pin = 5;
+const int SRCLK_Pin = 6;
+const int numOfShiftRegisters = 1;
+RelayController relayController(SER_Pin, RCLK_Pin, SRCLK_Pin, numOfShiftRegisters);
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
     // Hier können Sie den Code aus Ihrem ursprünglichen Callback einfügen
@@ -21,7 +26,7 @@ void setup() {
     wifiManager.setup();
     mqttManager.setup();
     mqttManager.setCallback(mqttCallback);
-    setupRelays();
+    relayController.setup();
     setupDS18B20();
     setupMotors();
 }
