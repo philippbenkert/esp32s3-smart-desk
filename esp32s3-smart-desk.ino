@@ -9,13 +9,13 @@ WiFiManager wifiManager(ssid, password);
 const char* mqtt_server = "192.168.0.1";
 const int mqtt_port = 1883;
 const char* client_id = "ESP32S3_Client";
-MQTTManager mqttManager(mqtt_server, mqtt_port, client_id);
+MQTTManager mqttManager(wifiManager, relayController, motorController);
 const int SER_Pin = 7;
 const int RCLK_Pin = 5;
 const int SRCLK_Pin = 6;
 const int numOfShiftRegisters = 1;
 RelayController relayController(SER_Pin, RCLK_Pin, SRCLK_Pin, numOfShiftRegisters);
-MotorController motorController;  // Sie müssen den Konstruktor von MotorController entsprechend definieren
+MotorController motorController(relayController);
 
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
