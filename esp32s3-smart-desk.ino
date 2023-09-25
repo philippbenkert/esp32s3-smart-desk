@@ -7,16 +7,20 @@
 const char* ssid = "Ihr_SSID";
 const char* password = "Ihr_Passwort";
 WiFiManager wifiManager(ssid, password);
+const char* mqtt_server = "192.168.0.1";
+const int mqtt_port = 1883;
+const char* client_id = "ESP32S3_Client";
+MQTTManager mqttManager(mqtt_server, mqtt_port, client_id);
 
-void setup() {
-    
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+    // Hier können Sie den Code aus Ihrem ursprünglichen Callback einfügen
 }
-
 void setup() {
     // Initialisierungen hier
     Serial.begin(115200);
     wifiManager.setup();
-    setupMQTT();
+    mqttManager.setup();
+    mqttManager.setCallback(mqttCallback);
     setupRelays();
     setupDS18B20();
     setupMotors();
@@ -25,7 +29,7 @@ void setup() {
 void loop() {
     // Hauptlogik hier
     wifiManager.loop();
-    setupMQTT();
+    mqttManager.loop();
     loopRelays();
     loopDS18B20();
     loopMotors();
