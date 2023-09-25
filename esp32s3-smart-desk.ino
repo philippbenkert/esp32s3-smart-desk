@@ -15,6 +15,8 @@ const int RCLK_Pin = 5;
 const int SRCLK_Pin = 6;
 const int numOfShiftRegisters = 1;
 RelayController relayController(SER_Pin, RCLK_Pin, SRCLK_Pin, numOfShiftRegisters);
+MotorController motorController;  // Sie müssen den Konstruktor von MotorController entsprechend definieren
+
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
     payload[length] = '\0';  // Null-terminate the payload
@@ -58,7 +60,9 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     }
 
     // Feedback an den MQTT-Server senden
-    mqttManager.publish("/feedback", ("Received command on topic: " + String(topic) + " with payload: " + payloadStr).c_str());
+    else {
+    mqttManager.publish("/error", ("Unknown command on topic: " + String(topic) + " with payload: " + payloadStr).c_str());
+    }
 }
 
 void setup() {
