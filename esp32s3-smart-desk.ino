@@ -4,9 +4,18 @@
 #include "ds18b20_sensor.h"
 #include "motor_controller.h"
 
+const char* ssid = "Ihr_SSID";
+const char* password = "Ihr_Passwort";
+WiFiManager wifiManager(ssid, password);
+
+void setup() {
+    
+}
+
 void setup() {
     // Initialisierungen hier
-    setupWiFi();
+    Serial.begin(115200);
+    wifiManager.setup();
     setupMQTT();
     setupRelays();
     setupDS18B20();
@@ -15,8 +24,8 @@ void setup() {
 
 void loop() {
     // Hauptlogik hier
-    loopWiFi();
-    loopMQTT();
+    wifiManager.loop();
+    setupMQTT();
     loopRelays();
     loopDS18B20();
     loopMotors();
