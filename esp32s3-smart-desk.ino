@@ -17,8 +17,50 @@ const int numOfShiftRegisters = 1;
 RelayController relayController(SER_Pin, RCLK_Pin, SRCLK_Pin, numOfShiftRegisters);
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
-    // Hier können Sie den Code aus Ihrem ursprünglichen Callback einfügen
+    payload[length] = '\0';  // Null-terminate the payload
+    String payloadStr = String((char*)payload);
+
+    if (strcmp(topic, "/relay/monitor") == 0) {
+        if (payloadStr == "on") {
+            relayController.setRelayState(RelayController::Monitor, true);
+        } else if (payloadStr == "off") {
+            relayController.setRelayState(RelayController::Monitor, false);
+        }
+    } else if (strcmp(topic, "/relay/laptop") == 0) {
+        if (payloadStr == "on") {
+            relayController.setRelayState(RelayController::Laptop, true);
+        } else if (payloadStr == "off") {
+            relayController.setRelayState(RelayController::Laptop, false);
+        }
+    } else if (strcmp(topic, "/relay/reserve1") == 0) {
+        if (payloadStr == "on") {
+            relayController.setRelayState(RelayController::Reserve1, true);
+        } else if (payloadStr == "off") {
+            relayController.setRelayState(RelayController::Reserve1, false);
+        }
+    } else if (strcmp(topic, "/relay/reserve2") == 0) {
+        if (payloadStr == "on") {
+            relayController.setRelayState(RelayController::Reserve2, true);
+        } else if (payloadStr == "off") {
+            relayController.setRelayState(RelayController::Reserve2, false);
+        }
+    } else if (strcmp(topic, "/motor/table") == 0) {
+        if (payloadStr == "up") {
+            motorController.moveTable(MotorController::Direction::Up);
+        } else if (payloadStr == "down") {
+            motorController.moveTable(MotorController::Direction::Down);
+        } else if (payloadStr == "stop") {
+            motorController.stopTable();
+        }
+    } else if (strcmp(topic, "/motor/runtime") == 0) {
+        int runtime = payloadStr.toInt();
+        motorController.setRuntime(runtime);
+    }
+
+    // Feedback an den MQTT-Server senden
+    mqttManager.publish("/feedback", ("Received command on topic: " + String(topic) + " with payload: " + payloadStr).c_str());
 }
+
 void setup() {
     // Initialisierungen hier
     Serial.begin(115200);
