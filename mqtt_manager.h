@@ -2,23 +2,27 @@
 #define MQTT_MANAGER_H
 
 #include <PubSubClient.h>
-#include <WiFi.h>
+#include "wifi_manager.h"
+#include "relay_controller.h"
+#include "motor_controller.h"
 
 class MQTTManager {
 public:
-    MQTTManager(const char* mqtt_server, int mqtt_port, const char* client_id);
+    MQTTManager(WiFiManager& wifiManager, RelayController& relayController, MotorController& motorController);
 
     void setup();
     void loop();
 
-    bool isConnected() const;
-
-    void setCallback(void (*callback)(char*, byte*, unsigned int));
+    void callback(char* topic, byte* payload, unsigned int length);
 
 private:
-    WiFiClient _espClient;
+    WiFiManager& _wifiManager;
+    RelayController& _relayController;
+    MotorController& _motorController;
     PubSubClient _client;
+
+    void handleRelayCommands(const char* topic, const char* payload);
+    void handleMotorCommands(const char* topic, const char* payload);
 };
 
 #endif // MQTT_MANAGER_H
-
