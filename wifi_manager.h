@@ -15,6 +15,10 @@ public:
 private:
     const char* _ssid;
     const char* _password;
+    const unsigned long _connectionTimeout = 30000;  // 30 Sekunden
+    unsigned long _lastAttemptTime = 0;
+
+    void connectToWiFi();
 };
 
 #endif // WIFI_MANAGER_H
