@@ -14,6 +14,11 @@ void MotorController::moveTableUp() {
     _relayController.setRelayState(RelayController::TABLE_UP, false);
 }
 
+void MotorController::stopTable() {
+    _relayController.setRelayState(RelayController::TABLE_UP, false);
+    _relayController.setRelayState(RelayController::TABLE_DOWN, false);
+}
+
 void MotorController::moveTableDown() {
     _relayController.setRelayState(RelayController::TABLE_DOWN, true);
     delay(_motorRunTimeDown);
