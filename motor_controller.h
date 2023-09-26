@@ -12,6 +12,7 @@ public:
     // Bewegt die Tischplatte nach oben oder unten
     void moveTableUp();
     void moveTableDown();
+    void stopTable();
 
     // Setzt die Laufzeit der Motoren
     void setMotorRunTimeUp(unsigned long duration);
