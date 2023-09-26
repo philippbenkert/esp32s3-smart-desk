@@ -17,7 +17,7 @@ public:
         LAPTOP,
         TABLE_UP,
         TABLE_DOWN,
-        RESERVE1,
+        FAN,
         RESERVE2
     };
 
