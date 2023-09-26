@@ -9,6 +9,10 @@ void MotorController::setup() {
 }
 
 void MotorController::moveTableUp() {
+    // Stellen Sie sicher, dass das "runter"-Relais deaktiviert ist
+    _relayController.setRelayState(RelayController::TABLE_DOWN, false);
+    delay(50);  // Ein kurzes Delay, um sicherzustellen, dass das Relais vollständig deaktiviert ist
+
     _relayController.setRelayState(RelayController::TABLE_UP, true);
     delay(_motorRunTimeUp);
     _relayController.setRelayState(RelayController::TABLE_UP, false);
@@ -20,6 +24,10 @@ void MotorController::stopTable() {
 }
 
 void MotorController::moveTableDown() {
+    // Stellen Sie sicher, dass das "hoch"-Relais deaktiviert ist
+    _relayController.setRelayState(RelayController::TABLE_UP, false);
+    delay(50);  // Ein kurzes Delay, um sicherzustellen, dass das Relais vollständig deaktiviert ist
+
     _relayController.setRelayState(RelayController::TABLE_DOWN, true);
     delay(_motorRunTimeDown);
     _relayController.setRelayState(RelayController::TABLE_DOWN, false);
