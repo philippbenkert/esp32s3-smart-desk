@@ -24,3 +24,4 @@ bool RelayController::getRelayState(int relayIndex) const {
     }
     return false;
 }
+
