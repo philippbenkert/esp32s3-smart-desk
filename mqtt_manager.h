@@ -5,8 +5,13 @@
 #include "wifi_manager.h"
 #include "relay_controller.h"
 #include "motor_controller.h"
+#include "error_handler.h"
+
+
 
 class MQTTManager {
+    ErrorHandler errorHandler;
+
 public:
     MQTTManager(PubSubClient& client, WiFiManager& wifiManager, RelayController& relayController, MotorController& motorController, const char* mqtt_server, int mqtt_port);
     bool publish(const char* topic, const char* payload);
@@ -14,6 +19,10 @@ public:
     void setup();
     void loop();
     void callback(char* topic, byte* payload, unsigned int length);
+    void someMethod() {
+        // Bei einem Fehler:
+        errorHandler.reportError(ErrorHandler::ErrorType::UNKNOWN_TOPIC, "Received unknown topic: /some/topic");
+    }
 
 private:
     const char* _mqtt_server;
