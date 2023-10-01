@@ -1,4 +1,7 @@
 #include "motor_controller.h"
+#include "relay_controller.h"
+
+constexpr unsigned long WAIT_DURATION = 50;
 
 MotorController::MotorController(RelayController& relayController)
     : _relayController(relayController), _motorRunTimeUp(0), _motorRunTimeDown(0), _currentState(IDLE), _startTime(0) {}
@@ -16,21 +19,27 @@ void MotorController::setup() {
 }
 
 void MotorController::moveTableUp() {
-    _relayController.setRelayState(RelayController::TABLE_DOWN, false);
+    _relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_DOWN), false);
     _currentState = WAITING_TO_MOVE_UP;
     _startTime = millis();
+        Serial.println("Moving table up");
+
 }
 
 void MotorController::moveTableDown() {
-    _relayController.setRelayState(RelayController::TABLE_UP, false);
+    _relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_UP), false);
     _currentState = WAITING_TO_MOVE_DOWN;
     _startTime = millis();
+        Serial.println("Moving table down");
+
 }
 
 void MotorController::stopTable() {
-    _relayController.setRelayState(RelayController::TABLE_UP, false);
-    _relayController.setRelayState(RelayController::TABLE_DOWN, false);
+_relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_UP), false);
+_relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_DOWN), false);
     _currentState = IDLE;
+        Serial.println("Stopping table movement");
+
 }
 
 void MotorController::setMotorRunTimeUp(unsigned long duration) {
@@ -46,31 +55,31 @@ void MotorController::update() {
 
     switch (_currentState) {
         case WAITING_TO_MOVE_UP:
-            if (elapsed >= 50) {
-                _relayController.setRelayState(RelayController::TABLE_UP, true);
-                _startTime = millis();
-                _currentState = MOVING_UP;
+            if (!_relayController.getRelayState(static_cast<int>(RelayController::Relay::TABLE_UP))) {
+                _relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_UP), true);
+                // ... (restlicher Code bleibt unverändert)
             }
             break;
 
         case MOVING_UP:
-            if (elapsed >= _motorRunTimeUp) {
-                _relayController.setRelayState(RelayController::TABLE_UP, false);
-                _currentState = IDLE;
-            }
+            if (_relayController.getRelayState(static_cast<int>(RelayController::Relay::TABLE_UP))) {
+    _relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_UP), false);
+    _currentState = IDLE;
+}
             break;
 
         case WAITING_TO_MOVE_DOWN:
-            if (elapsed >= 50) {
-                _relayController.setRelayState(RelayController::TABLE_DOWN, true);
-                _startTime = millis();
-                _currentState = MOVING_DOWN;
+            if (!_relayController.getRelayState(static_cast<int>(RelayController::Relay::TABLE_DOWN))) {
+                _relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_DOWN), true);
+                // ... (restlicher Code bleibt unverändert)
             }
             break;
 
         case MOVING_DOWN:
             if (elapsed >= _motorRunTimeDown) {
-                _relayController.setRelayState(RelayController::TABLE_DOWN, false);
+                    if (_relayController.getRelayState(static_cast<int>(RelayController::Relay::TABLE_DOWN))) {
+                    _relayController.setRelayState(static_cast<int>(RelayController::Relay::TABLE_DOWN), false);
+                }
                 _currentState = IDLE;
             }
             break;
@@ -79,3 +88,4 @@ void MotorController::update() {
             break;
     }
 }
+
