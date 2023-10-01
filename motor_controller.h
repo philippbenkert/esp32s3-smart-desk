@@ -1,7 +1,7 @@
 #ifndef MOTOR_CONTROLLER_H
 #define MOTOR_CONTROLLER_H
 
-#include "relay_controller.h"
+class RelayController; // Vorwärtsdeklaration von RelayController
 
 class MotorController {
 public:
